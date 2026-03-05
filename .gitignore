@@ -1,0 +1,21 @@
+# sbt
+target/
+project/target/
+project/project/
+
+# IDE
+.idea/
+.vscode/
+.bsp/
+.metals/
+.bloop/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+*.env
+*.local.conf
+*.p12
+*.pem
