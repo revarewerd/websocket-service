@@ -52,23 +52,29 @@ object SpeedRuleId:
 
 /**
  * GPS точка из топика gps-events.
- * Формат совместим с Connection Manager (публикует) и Rule Checker (потребляет).
+ * Формат совместим с Connection Manager (GpsEventMessage).
+ * deviceId отсутствует в CM — не включён.
  */
 final case class GpsPoint(
     vehicleId: VehicleId,
-    deviceId: DeviceId,
     organizationId: OrganizationId,
     imei: Imei,
     latitude: Double,
     longitude: Double,
-    altitude: Option[Double],
+    altitude: Int,
     speed: Int,
-    course: Option[Int],
-    satellites: Option[Int],
-    timestamp: Instant,
-    serverTimestamp: Instant,
+    course: Int,
+    satellites: Int,
+    deviceTime: Long,                // epoch millis от трекера
+    serverTime: Long,                // epoch millis от CM
     hasGeozones: Boolean,
-    hasSpeedRules: Boolean
+    hasSpeedRules: Boolean,
+    hasRetranslation: Boolean,
+    retranslationTargets: Option[List[String]],
+    isMoving: Boolean,
+    isValid: Boolean,
+    protocol: String,
+    instanceId: String
 ) derives JsonCodec
 
 /**

@@ -71,19 +71,24 @@ object MessageRouterSpec extends ZIOSpecDefault:
 
   private val testPoint = GpsPoint(
     vehicleId = VehicleId(12345),
-    deviceId = DeviceId(67890),
     organizationId = OrganizationId(100),
     imei = Imei("352094080055555"),
     latitude = 55.7558,
     longitude = 37.6173,
-    altitude = Some(150.0),
+    altitude = 150,
     speed = 65,
-    course = Some(180),
-    satellites = Some(12),
-    timestamp = Instant.parse("2026-03-03T10:30:00Z"),
-    serverTimestamp = Instant.parse("2026-03-03T10:30:00.123Z"),
+    course = 180,
+    satellites = 12,
+    deviceTime = Instant.parse("2026-03-03T10:30:00Z").toEpochMilli,
+    serverTime = Instant.parse("2026-03-03T10:30:00.123Z").toEpochMilli,
     hasGeozones = true,
-    hasSpeedRules = false
+    hasSpeedRules = false,
+    hasRetranslation = false,
+    retranslationTargets = None,
+    isMoving = true,
+    isValid = true,
+    protocol = "wialon",
+    instanceId = "cm-test"
   )
 
   private val testGeozoneEvent = GeozoneEvent(

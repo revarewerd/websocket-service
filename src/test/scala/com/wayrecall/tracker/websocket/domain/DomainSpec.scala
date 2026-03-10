@@ -212,19 +212,24 @@ object DomainSpec extends ZIOSpecDefault:
     test("GpsPoint — JSON roundtrip") {
       val point = GpsPoint(
         vehicleId = VehicleId(12345),
-        deviceId = DeviceId(67890),
         organizationId = OrganizationId(100),
         imei = Imei("352094080055555"),
         latitude = 55.7558,
         longitude = 37.6173,
-        altitude = Some(150.0),
+        altitude = 150,
         speed = 65,
-        course = Some(180),
-        satellites = Some(12),
-        timestamp = Instant.parse("2026-03-03T10:30:00Z"),
-        serverTimestamp = Instant.parse("2026-03-03T10:30:00.123Z"),
+        course = 180,
+        satellites = 12,
+        deviceTime = Instant.parse("2026-03-03T10:30:00Z").toEpochMilli,
+        serverTime = Instant.parse("2026-03-03T10:30:00.123Z").toEpochMilli,
         hasGeozones = true,
-        hasSpeedRules = false
+        hasSpeedRules = false,
+        hasRetranslation = false,
+        retranslationTargets = None,
+        isMoving = true,
+        isValid = true,
+        protocol = "wialon",
+        instanceId = "cm-test"
       )
       val json = point.toJson
       val decoded = json.fromJson[GpsPoint]
@@ -294,27 +299,32 @@ object DomainSpec extends ZIOSpecDefault:
     test("GpsPoint — опциональные поля null-safe") {
       val point = GpsPoint(
         vehicleId = VehicleId(1),
-        deviceId = DeviceId(1),
         organizationId = OrganizationId(1),
         imei = Imei("000"),
         latitude = 0.0,
         longitude = 0.0,
-        altitude = None,
+        altitude = 0,
         speed = 0,
-        course = None,
-        satellites = None,
-        timestamp = Instant.now(),
-        serverTimestamp = Instant.now(),
+        course = 0,
+        satellites = 0,
+        deviceTime = Instant.now().toEpochMilli,
+        serverTime = Instant.now().toEpochMilli,
         hasGeozones = false,
-        hasSpeedRules = false
+        hasSpeedRules = false,
+        hasRetranslation = false,
+        retranslationTargets = None,
+        isMoving = false,
+        isValid = false,
+        protocol = "",
+        instanceId = ""
       )
       val json = point.toJson
       val decoded = json.fromJson[GpsPoint]
       assertTrue(
         decoded.isRight &&
-        decoded.toOption.get.altitude.isEmpty &&
-        decoded.toOption.get.course.isEmpty &&
-        decoded.toOption.get.satellites.isEmpty
+        decoded.toOption.get.altitude == 0 &&
+        decoded.toOption.get.course == 0 &&
+        decoded.toOption.get.satellites == 0
       )
     }
   )

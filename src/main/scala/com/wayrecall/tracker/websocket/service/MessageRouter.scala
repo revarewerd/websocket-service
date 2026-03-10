@@ -44,14 +44,14 @@ private final class MessageRouterLive(
           _ <- ZIO.when(channels.nonEmpty) {
             val message: ServerMessage = ServerMessage.PositionUpdate(
               vehicleId = point.vehicleId.value,
-              deviceId = point.deviceId.value,
+              deviceId = 0L,  // CM не знает deviceId
               latitude = point.latitude,
               longitude = point.longitude,
               speed = point.speed,
-              course = point.course,
-              satellites = point.satellites,
-              timestamp = point.timestamp,
-              serverTimestamp = point.serverTimestamp
+              course = Some(point.course),
+              satellites = Some(point.satellites),
+              timestamp = java.time.Instant.ofEpochMilli(point.deviceTime),
+              serverTimestamp = java.time.Instant.ofEpochMilli(point.serverTime)
             )
             sendToChannels(channels, message.toJson)
           }
